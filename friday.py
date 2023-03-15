@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # Merge multiple Spotify playlists into a single one
 
+# TODO: Get song list(s) from playlist(s)
+# TODO: Combine song lists
+# TODO: Add missing to target playlist
+# TODO: Remove missing from target playlist
+
 # Import packages
 import sys
 
