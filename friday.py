@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Merge multiple Spotify playlists into a single one
+# Merge multiple Spotify playlists into a single one using the Spotify API
 
 # TODO: Get song list(s) from playlist(s)
 # TODO: Combine song lists
@@ -24,9 +24,15 @@ def print_line(print_chars="-", repetition=100):
 
 
 # Define global variables
+base_url = "https://api.spotify.com/v1"
 
 
 if __name__ == "__main__":
+    print_line()
+
+
+
+
     print_line("=")
     print("Ciao bella, ciao")
     print_line("=")
