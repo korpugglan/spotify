@@ -13,6 +13,19 @@ import sys
 
 
 # Define functions
+def load_credentials_from_jsonld(cred_json_name="credentials.jsonld"):
+    """Loads credentials from json into a dictionary
+        Args:
+            cred_json_name (str): Relative path to jsonld file to load
+        Returns:
+            dictionary (dict): A dictionary with the contents of the json
+    """
+    with open(cred_json_name) as x:
+        dictionary = json.load(x)
+
+    return dictionary
+
+
 def print_line(print_chars="-", repetition=100):
     """Prints an amount of strings in a row.
         Args:
@@ -26,18 +39,22 @@ def print_line(print_chars="-", repetition=100):
 
 
 # Define global variables
-cred_json_name = "credentials.jsonld"
+api_dict = {"base_url": "https://api.spotify.com/v1",
+            "endpoints": {
+                "auth": "/authorization"
+                }
+            }
 
 
 if __name__ == "__main__":
     print_line()
     print("LOADING CREDENTIALS")
-    with open(cred_json_name) as x:
-        credentials_dict = json.load(x)
-    print(credentials_dict)
+    cred_dict = load_credentials_from_jsonld()
+    print(cred_dict)
 
     print_line()
     print("RUNNING USER AUTHORIZATION")
+    print(api_dict)
     # auth_req = requests.get(base_url + "/authorize", )
 
     print_line("=")
