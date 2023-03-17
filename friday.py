@@ -7,6 +7,7 @@
 # TODO: Remove missing from target playlist
 
 # Import packages
+import requests
 import sys
 
 
@@ -28,10 +29,9 @@ base_url = "https://api.spotify.com/v1"
 
 
 if __name__ == "__main__":
-    print_line()
-
-
-
+    print_line("\n")
+    print_line("RUNNING USER AUTHORIZATION")
+    auth_req = requests.get(base_url + "/authorize", )
 
     print_line("=")
     print("Ciao bella, ciao")
