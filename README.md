@@ -11,6 +11,8 @@ And just to be sure to agree with Spotify's Terms and Conditions, here's a logo:
 
 # friday.py
 A script to merge separate playlists into a single one.
+It makes use of credentials.jsonld to import some variables. Create a new one based on the template.
+
 Wishlist items:
 - add from a flexible number of playlists
 - diff in playlist lengths

@@ -7,6 +7,7 @@
 # TODO: Remove missing from target playlist
 
 # Import packages
+import json
 import requests
 import sys
 
@@ -25,13 +26,19 @@ def print_line(print_chars="-", repetition=100):
 
 
 # Define global variables
-base_url = "https://api.spotify.com/v1"
+cred_json_name = "credentials.jsonld"
 
 
 if __name__ == "__main__":
-    print_line("\n")
-    print_line("RUNNING USER AUTHORIZATION")
-    auth_req = requests.get(base_url + "/authorize", )
+    print_line()
+    print("LOADING CREDENTIALS")
+    with open(cred_json_name) as x:
+        credentials_dict = json.load(x)
+    print(credentials_dict)
+
+    print_line()
+    print("RUNNING USER AUTHORIZATION")
+    # auth_req = requests.get(base_url + "/authorize", )
 
     print_line("=")
     print("Ciao bella, ciao")
