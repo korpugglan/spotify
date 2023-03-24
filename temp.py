@@ -1,5 +1,10 @@
 # Dump for parts of code to reuse later on
 
+# https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
+# https://stackoverflow.com/questions/65435932/spotify-api-authorization-code-flow-with-python
+# https://help.aweber.com/hc/en-us/articles/360036524474-How-do-I-use-Proof-Key-for-Code-Exchange-PKCE-
+# https://requests-oauthlib.readthedocs.io/en/latest/oauth2_workflow.html
+
 import base64
 import hashlib
 from http.server import BaseHTTPRequestHandler, HTTPServer
