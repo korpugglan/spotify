@@ -10,6 +10,7 @@
 import base64
 import hashlib
 import json
+import re
 import requests_oauthlib as oauthlib
 import uuid
 
@@ -57,18 +58,16 @@ if __name__ == "__main__":
     # print(cred_dict)
 
     print("RUNNING USER AUTHORIZATION")
-    rfc_state = uuid.uuid4().hex
-    code_verifier = base64.urlsafe_b64encode(uuid.uuid4().hex.encode("utf-8"))
-    challenge_bytes = hashlib.sha256(code_verifier).digest()
-    code_challenge = base64.urlsafe_b64encode(challenge_bytes).rstrip(b'=')
+    # rfc_state = uuid.uuid4().hex
+    # code_verifier = base64.urlsafe_b64encode(uuid.uuid4().hex.encode("utf-8"))
+    # challenge_bytes = hashlib.sha256(code_verifier).digest()
+    # code_challenge = base64.urlsafe_b64encode(challenge_bytes).rstrip(b'=')
 
     oauth = oauthlib.OAuth2Session(cred_dict["client_id"], redirect_uri=api_dict["redirect_uri"])  # , scope=scope)
-    auth_url, state = oauth.authorization_url(api_dict["auth_url"])
+    auth_url, auth_state = oauth.authorization_url(api_dict["auth_url"])
     print(f"Please go to {auth_url} and authorize access.")
     auth_response = input("Enter the full callback URL: ")
-
-    print_line()
-    print(auth_response)
+    auth_code = auth_response.replace(f"{api_dict['redirect_uri']}/?code=", "")
 
     print_line("=")
     print("Ciao bella, ciao")
