@@ -11,8 +11,10 @@
 import base64
 import hashlib
 import json
+import re
 import requests
 import requests_oauthlib as oauthlib
+import sys
 import uuid
 
 
@@ -57,7 +59,7 @@ if __name__ == "__main__":
     print("LOADING CREDENTIALS")
     cred_dict = load_credentials_from_jsonld()
 
-    print("RETRIEVE AUTHORIZATION CODE THROUGH MANUAL LOGIN")
+    print("CREATING PKCE CODES AND SETTING UP FIRST AUTHORIZATION REQUEST")
     rfc_state = uuid.uuid4().hex
     code_verifier = base64.urlsafe_b64encode(uuid.uuid4().hex.encode("utf-8"))
     challenge_bytes = hashlib.sha256(code_verifier).digest()
@@ -73,13 +75,24 @@ if __name__ == "__main__":
                "code_challenge": code_challenge
                }
 
+    print("RETRIEVING AUTHORIZATION CODE THROUGH MANUAL LOGIN")
     auth_response = requests.get(api_dict["auth_url"], params=payload)
     auth_code_response = input(f"Please go to {auth_response.url} and copy the url here: ")
-    auth_code = auth_code_response.replace(f"{api_dict['redirect_uri']}/?code=", "")
-    print(f"Authorization code: {auth_code}")
+    if re.match(api_dict["redirect_uri"] + r"/\?code=.*$", auth_code_response):
+        (auth_code, state) = re.match(api_dict["redirect_uri"] + r"/\?code=(.*)&state=(.*)$",
+                                      auth_code_response).group(1, 2)
+        print(f"Auth code: {auth_code}")
+        print(f"State: {state}")
+    elif re.match(api_dict["redirect_uri"] + r"/\?error=.*$", auth_code_response):
+        (error, state) = re.match(api_dict["redirect_uri"] + r"/\?error=(.*)&state=(.*)$",
+                                      auth_code_response).group(1, 2)
+        print(f"An error occurred: {error}")
+    else:
+        print(f"An unknown error occurred, please check your callback url and code!")
 
-    # print("RETRIEVE AUTHORIZATION TOKEN USING THE CODE")
-    # auth_token = oauth.fetch_token()
+    print("RETRIEVE AUTHORIZATION TOKEN USING THE CODE")
+
+
 
     print_line("=")
     print("Ciao bella, ciao")
