@@ -3,6 +3,7 @@
 
 # TODO: Get song list(s) from playlist(s)
 # TODO: Combine song lists
+# TODO: Remove duplicate songs
 # TODO: Add missing to target playlist
 # TODO: Remove missing from target playlist
 
@@ -10,7 +11,7 @@
 import base64
 import hashlib
 import json
-import re
+import requests
 import requests_oauthlib as oauthlib
 import uuid
 
@@ -55,19 +56,30 @@ if __name__ == "__main__":
     print_line()
     print("LOADING CREDENTIALS")
     cred_dict = load_credentials_from_jsonld()
-    # print(cred_dict)
 
-    print("RUNNING USER AUTHORIZATION")
-    # rfc_state = uuid.uuid4().hex
-    # code_verifier = base64.urlsafe_b64encode(uuid.uuid4().hex.encode("utf-8"))
-    # challenge_bytes = hashlib.sha256(code_verifier).digest()
-    # code_challenge = base64.urlsafe_b64encode(challenge_bytes).rstrip(b'=')
+    print("RETRIEVE AUTHORIZATION CODE THROUGH MANUAL LOGIN")
+    rfc_state = uuid.uuid4().hex
+    code_verifier = base64.urlsafe_b64encode(uuid.uuid4().hex.encode("utf-8"))
+    challenge_bytes = hashlib.sha256(code_verifier).digest()
+    code_challenge = base64.urlsafe_b64encode(challenge_bytes).rstrip(b'=')
 
-    oauth = oauthlib.OAuth2Session(cred_dict["client_id"], redirect_uri=api_dict["redirect_uri"])  # , scope=scope)
-    auth_url, auth_state = oauth.authorization_url(api_dict["auth_url"])
-    print(f"Please go to {auth_url} and authorize access.")
-    auth_response = input("Enter the full callback URL: ")
-    auth_code = auth_response.replace(f"{api_dict['redirect_uri']}/?code=", "")
+    payload = {"client_id": cred_dict["client_id"],
+               "response_type": "code",
+               "redirect_uri": api_dict["redirect_uri"],
+               "state": rfc_state,
+               # "scope": "https://developer.spotify.com/documentation/general/guides/authorization/scopes/",
+               # "show_dialog": "false",
+               "code_challenge_method": "S256",
+               "code_challenge": code_challenge
+               }
+
+    auth_response = requests.get(api_dict["auth_url"], params=payload)
+    auth_code_response = input(f"Please go to {auth_response.url} and copy the url here: ")
+    auth_code = auth_code_response.replace(f"{api_dict['redirect_uri']}/?code=", "")
+    print(f"Authorization code: {auth_code}")
+
+    # print("RETRIEVE AUTHORIZATION TOKEN USING THE CODE")
+    # auth_token = oauth.fetch_token()
 
     print_line("=")
     print("Ciao bella, ciao")
